@@ -15,10 +15,12 @@ const messages = [
 
 const bot = new TelegramBot(TELEGRAM_TOKEN);
 
-cron.schedule("0 0 12 * *", () => {
+export default async function handler(req, res) {
     const message = messages[Math.floor(Math.random() * messages.length)];
-    bot.sendMessage(TELEGRAM_ID, message);
-}, {
-    timezone: "Asia/Baku"
+    try {
+        await bot.sendMessage(TELEGRAM_ID, message);
+        res.status(200).json({ message: "Message sent successfully" });
+    } catch (error) {
+        res.status(500).json({ error: `Error sending message: ${error}` })
+    }
 }
-)
