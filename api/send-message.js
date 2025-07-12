@@ -1,8 +1,7 @@
 import TelegramBot from "node-telegram-bot-api";
-import cron from "node-cron";
 
-const TELEGRAM_TOKEN = "7982658581:AAE4kWWrR9aVWYWGRaHPhEPUSbtr6sPLMfY";
-const TELEGRAM_ID = "1931386052"
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
+const TELEGRAM_ID = process.env.TELEGRAM_ID;
 
 const messages = [
     "Привет, любимая! Сегодня снова 12-е — ещё один волшебный месяц рядом с тобой. Каждый день я всё больше понимаю, как сильно я тебя люблю. Спасибо, что ты у меня есть 💕",
