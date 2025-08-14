@@ -1,4 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
+import { Redis } from "@upstash/redis";
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const TELEGRAM_ID = process.env.TELEGRAM_ID;
@@ -31,13 +32,19 @@ const messages = [
 
 
 const bot = new TelegramBot(TELEGRAM_TOKEN);
+const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+})
 
-let index = 0;
 export default async function handler(req, res) {
+    let index = await redis.get("messageIndex") || 1;
+    index = Number(index);
+    
     const message = messages[index];
     try {
         await bot.sendMessage(TELEGRAM_ID, message);
-        index++;
+        await redis.set("messageIndex", (index+1) & messages.length);
         res.status(200).json({ message: "Message sent successfully" });
     } catch (error) {
         res.status(500).json({ error: `Error sending message: ${error}` })
